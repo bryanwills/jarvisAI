@@ -1,0 +1,97 @@
+version: "3.9"
+
+networks:
+  jarvis_net:
+    driver: bridge
+
+volumes:
+  pgdata:
+  ollama_data:
+  openwebui_data:
+  n8n_data:
+
+services:
+  db:
+    image: ankane/pgvector:latest
+    container_name: jarvis_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./deploy/db/init:/docker-entrypoint-initdb.d
+    networks:
+      - jarvis_net
+
+  ingestion:
+    build: ./ingestion/service
+    container_name: jarvis_ingestion
+    restart: unless-stopped
+    environment:
+      PGHOST: db
+      PGUSER: ${PGUSER}
+      PGPASSWORD: ${PGPASSWORD}
+      PGDATABASE: ${PGDATABASE}
+      PGPORT: 5432
+      EMBEDDING_MODEL_NAME: nomic-ai/nomic-embed-text-v1
+    depends_on:
+      - db
+    ports:
+      - "8001:8001"
+    networks:
+      - jarvis_net
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: jarvis_ollama
+    restart: unless-stopped
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - jarvis_net
+
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: jarvis_openwebui
+    restart: unless-stopped
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+    depends_on:
+      - ollama
+    volumes:
+      - openwebui_data:/app/backend/data
+    ports:
+      - "3001:8080"
+    networks:
+      - jarvis_net
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: jarvis_n8n
+    restart: unless-stopped
+    environment:
+      N8N_HOST: ${N8N_HOST}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: ${N8N_PROTOCOL}
+      WEBHOOK_URL: ${WEBHOOK_URL}
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: db
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DATABASE}
+      DB_POSTGRESDB_USER: ${PGUSER}
+      DB_POSTGRESDB_PASSWORD: ${PGPASSWORD}
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+    depends_on:
+      - db
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - jarvis_net

@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Document {
+  id         Int       @id @default(autoincrement())
+  path       String?
+  type       String?
+  tags       String[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  privacy    String?
+  source     String?
+  hash       String?
+  text       String?
+  Chunks     Chunk[]
+}
+
+model Chunk {
+  id          Int       @id @default(autoincrement())
+  document_id Int
+  chunk_idx   Int
+  text        String?
+  metadata    Json?
+  Document    Document  @relation(fields: [document_id], references: [id], onDelete: Cascade)
+}
+
+model Event {
+  id      Int      @id @default(autoincrement())
+  ts      DateTime?
+  kind    String?
+  payload Json?
+}
+
+model Summary {
+  id      Int      @id @default(autoincrement())
+  day     DateTime?
+  type    String?
+  text    String?
+  metrics Json?
+}
