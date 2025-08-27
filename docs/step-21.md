@@ -1,0 +1,15 @@
+# Step 21 — TL;DR Execution Checklist
+- [ ] Bring up Ubuntu VM on ESXi; install Docker/Portainer.  
+- [ ] Deploy Postgres+pgvector (Step 5).  
+- [ ] Stand up Embeddings service (Step 6).  
+- [ ] Wire Ingestion (files, GitHub, OCR) (Step 7).  
+- [ ] Install ActivityWatch (Mac) + nightly export (Step 8).  
+- [ ] Build RAG indexes (LlamaIndex) (Step 9).  
+- [ ] Add agents & tools (LangChain) (Step 10).  
+- [ ] Run Ollama + OpenWebUI for dev (Steps 11–12).  
+- [ ] Configure Second Brain vault + Syncthing + Notion mirror (Step 13).  
+- [ ] Add n8n automations (Step 14).  
+- [ ] Enable Focus Coach (Step 15).  
+- [ ] When 5090 arrives: vLLM + LoRA (Steps 16–17).  
+- [ ] Cost & growth: migrate services, keep backups (Step 18 & 20).  
+- [ ] Image/video pipeline on GPU (Step 19).  
