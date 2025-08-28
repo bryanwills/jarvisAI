@@ -1,0 +1,10 @@
+[Unit]
+Description=Jarvis Delta Ingest (warm) every 4 hours
+
+[Timer]
+OnBootSec=5m
+OnUnitActiveSec=4h
+Unit=jarvis-delta@warm.service
+
+[Install]
+WantedBy=timers.target

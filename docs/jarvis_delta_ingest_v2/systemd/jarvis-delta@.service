@@ -1,0 +1,8 @@
+[Unit]
+Description=Jarvis Delta Ingest (profile=%i)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/jarvis-ingest
+ExecStart=/usr/bin/env python3 /opt/jarvis-ingest/delta_ingest.py --config /opt/jarvis-ingest/ingest.yaml --profile %i
+Environment=INGEST_API_URL=http://localhost:8001/ingest

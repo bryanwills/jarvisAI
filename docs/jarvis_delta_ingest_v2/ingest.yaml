@@ -1,0 +1,42 @@
+# ingest.yaml
+ingestion_api: "http://localhost:8001/ingest"
+state_db: "./delta_state.db"
+
+sources:
+  - root: "/data/vault"
+    cadence: "hot"
+    allow_exts: [".md", ".mdx", ".txt", ".py", ".ts", ".tsx", ".js", ".json", ".yaml", ".yml"]
+    exclude_globs: ["*/node_modules/*", "*/.git/*", "*/dist/*"]
+    type: "note"
+    tags: ["notes"]
+    privacy: "private"
+    source: "vault"
+    max_bytes: 5000000
+
+  - root: "/data/projects"
+    cadence: "hot"
+    allow_exts: [".md",".txt",".py",".ts",".tsx",".js",".json",".yaml",".yml",".go",".rs",".java",".kt",".swift",".rb",".php",".c",".cpp",".h",".hpp"]
+    exclude_globs: ["*/node_modules/*", "*/.git/*", "*/build/*", "*/dist/*"]
+    type: "code"
+    tags: ["code"]
+    privacy: "private"
+    source: "repo"
+    max_bytes: 10000000
+
+  - root: "/data/docs"
+    cadence: "warm"
+    allow_exts: [".md",".txt",".rst",".markdown",".json",".yaml",".yml"]
+    type: "doc"
+    tags: ["docs"]
+    privacy: "private"
+    source: "docs"
+    max_bytes: 20000000
+
+  - root: "/data/ebooks_text"
+    cadence: "cold"
+    allow_exts: [".txt"]
+    type: "ebook"
+    tags: ["ebooks"]
+    privacy: "private"
+    source: "ebooks"
+    max_bytes: 200000000

@@ -1,0 +1,3 @@
+*/15 * * * *  cd /opt/jarvis-ingest && /usr/bin/env python3 delta_ingest.py --config ingest.yaml --profile hot >> /var/log/jarvis_ingest_hot.log 2>&1
+7 */4 * * *   cd /opt/jarvis-ingest && /usr/bin/env python3 delta_ingest.py --config ingest.yaml --profile warm >> /var/log/jarvis_ingest_warm.log 2>&1
+0 3 * * *     cd /opt/jarvis-ingest && /usr/bin/env python3 delta_ingest.py --config ingest.yaml --profile cold >> /var/log/jarvis_ingest_cold.log 2>&1
