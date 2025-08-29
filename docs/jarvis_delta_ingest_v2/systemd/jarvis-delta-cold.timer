@@ -1,0 +1,9 @@
+[Unit]
+Description=Jarvis Delta Ingest (cold) daily at 03:00
+
+[Timer]
+OnCalendar=*-*-* 03:00:00
+Unit=jarvis-delta@cold.service
+
+[Install]
+WantedBy=timers.target
